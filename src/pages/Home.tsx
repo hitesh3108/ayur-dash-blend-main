@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import heroImage from "@/assets/ayurvedic-hero.jpg";
+import dashboardPreview from "@/assets/dashboard-preview.png"; // Make sure this image exists
 
 const testimonials = [
   {
@@ -27,7 +28,7 @@ const testimonials = [
   },
 ];
 
-const TestimonialCard = ({ testimonial }) => (
+const TestimonialCard = ({ testimonial }: { testimonial: typeof testimonials[0] }) => (
   <Card className="shadow-soft border-0 bg-card/50 backdrop-blur-sm">
     <CardContent className="p-8">
       <div className="flex items-center mb-4">
@@ -58,7 +59,7 @@ const Home = () => {
         title: "Signed out successfully",
         description: "You have been logged out.",
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error signing out",
         description: error.message,
@@ -117,7 +118,6 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       <section className="relative hero-gradient mandala-bg min-h-screen flex items-center justify-center px-4">
-        {/* FIX: Removed animation and transform scale classes for a static image */}
         <div className="absolute inset-0 overflow-hidden">
           <img 
             src={heroImage} 
@@ -128,22 +128,22 @@ const Home = () => {
         </div>
         
         <div className="container mx-auto text-center relative z-10">
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <Leaf className="h-10 w-10 text-white" />
+            <p className="text-4xl font-bold text-white">AyurVeda</p>
+          </div>
           <div className="animate-fade-up">
             <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card/10 backdrop-blur-sm border border-primary-foreground/20">
               <Sparkles className="h-4 w-4 text-accent" />
               <span className="text-primary-foreground/90 text-sm font-medium">AI-Powered Ayurvedic Solutions</span>
             </div>
-            
             <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-              Holistic Ayurvedic Diet Management, 
-              <span className="block text-accent">Powered by AI</span>
+              Holistic <span style={{ color: "#f2cc5a" }}>Ayurvedic</span> Diet Management
             </h1>
-            
             <p className="text-xl md:text-2xl text-primary-foreground/80 mb-12 max-w-3xl mx-auto leading-relaxed">
               Blend tradition with science. Smarter diet plans, better patient outcomes.
               Transform your practice with 8,000+ foods and ancient wisdom.
             </p>
-            
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               {renderAuthButtons()}
             </div>
@@ -151,9 +151,6 @@ const Home = () => {
         </div>
       </section>
 
-      ---
-
-      {/* Features Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
@@ -164,7 +161,6 @@ const Home = () => {
               Comprehensive tools for Ayurvedic practitioners to manage patients, create personalized diet plans, and track progress with AI assistance.
             </p>
           </div>
-
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Card className="shadow-soft hover:shadow-warm transition-smooth border-0 bg-card/50 backdrop-blur-sm">
               <CardContent className="p-8 text-center">
@@ -177,7 +173,6 @@ const Home = () => {
                 </p>
               </CardContent>
             </Card>
-
             <Card className="shadow-soft hover:shadow-warm transition-smooth border-0 bg-card/50 backdrop-blur-sm">
               <CardContent className="p-8 text-center">
                 <div className="w-16 h-16 mx-auto mb-6 bg-primary/10 rounded-2xl flex items-center justify-center">
@@ -189,7 +184,6 @@ const Home = () => {
                 </p>
               </CardContent>
             </Card>
-
             <Card className="shadow-soft hover:shadow-warm transition-smooth border-0 bg-card/50 backdrop-blur-sm">
               <CardContent className="p-8 text-center">
                 <div className="w-16 h-16 mx-auto mb-6 bg-warm/10 rounded-2xl flex items-center justify-center">
@@ -201,7 +195,6 @@ const Home = () => {
                 </p>
               </CardContent>
             </Card>
-
             <Card className="shadow-soft hover:shadow-warm transition-smooth border-0 bg-card/50 backdrop-blur-sm">
               <CardContent className="p-8 text-center">
                 <div className="w-16 h-16 mx-auto mb-6 bg-sage/10 rounded-2xl flex items-center justify-center">
@@ -217,9 +210,6 @@ const Home = () => {
         </div>
       </section>
 
-      ---
-
-      {/* Dashboard Previews */}
       <section className="py-20 px-4 earth-gradient">
         <div className="container mx-auto">
           <div className="text-center mb-16">
@@ -230,7 +220,6 @@ const Home = () => {
               Designed for both practitioners and patients, our interfaces make complex Ayurvedic principles accessible and actionable.
             </p>
           </div>
-
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <h3 className="text-3xl font-bold text-foreground mb-6">For Dietitians</h3>
@@ -255,21 +244,17 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            
-            <Card className="shadow-warm border-0 bg-card">
-              <CardContent className="p-8">
-                <div className="bg-muted rounded-lg h-64 flex items-center justify-center">
-                  <span className="text-muted-foreground text-lg">Dietitian Dashboard Preview</span>
-                </div>
-              </CardContent>
+            <Card className="shadow-warm border-0 bg-card p-4">
+              <img 
+                src={dashboardPreview} 
+                alt="Dietitian Dashboard Preview"
+                className="rounded-lg shadow-lg w-full"
+              />
             </Card>
           </div>
         </div>
       </section>
 
-      ---
-
-      {/* Testimonials */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
@@ -277,7 +262,6 @@ const Home = () => {
               Trusted by Ayurvedic Practitioners
             </h2>
           </div>
-
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <TestimonialCard key={index} testimonial={testimonial} />
@@ -286,22 +270,18 @@ const Home = () => {
         </div>
       </section>
 
-      ---
-
-      {/* Footer */}
       <footer className="py-12 px-4 bg-foreground/5">
         <div className="container mx-auto">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Leaf className="h-8 w-8 text-primary" />
-                <span className="text-2xl font-bold text-primary">AyurVeda AI</span>
+                <span className="text-2xl font-bold text-primary">AyurVeda</span>
               </div>
               <p className="text-muted-foreground">
                 Bridging ancient Ayurvedic wisdom with modern technology for better health outcomes.
               </p>
             </div>
-            
             <div>
               <h4 className="font-semibold text-foreground mb-4">Product</h4>
               <ul className="space-y-2 text-muted-foreground">
@@ -311,7 +291,6 @@ const Home = () => {
                 <li><a href="#" className="hover:text-primary transition-smooth">API</a></li>
               </ul>
             </div>
-            
             <div>
               <h4 className="font-semibold text-foreground mb-4">Company</h4>
               <ul className="space-y-2 text-muted-foreground">
@@ -321,7 +300,6 @@ const Home = () => {
                 <li><a href="#" className="hover:text-primary transition-smooth">Blog</a></li>
               </ul>
             </div>
-            
             <div>
               <h4 className="font-semibold text-foreground mb-4">Legal</h4>
               <ul className="space-y-2 text-muted-foreground">
@@ -332,9 +310,8 @@ const Home = () => {
               </ul>
             </div>
           </div>
-          
           <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
-            <p>&copy; 2024 AyurVeda AI. All rights reserved. Made with 🌿 for holistic wellness.</p>
+            <p>&copy; 2024 AyurVeda. All rights reserved. Made with 🌿 for holistic wellness.</p>
           </div>
         </div>
       </footer>

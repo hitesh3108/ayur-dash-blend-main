@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Leaf, Mail, Lock, User as UserIcon, Phone, MapPin, GraduationCap, Award, ArrowLeft } from 'lucide-react';
+import { Leaf, Mail, Lock, User as UserIcon, Phone, MapPin, GraduationCap, Award, ArrowLeft, Upload } from 'lucide-react';
 import type { User, Session } from '@supabase/supabase-js';
 
 interface LoginForm {
@@ -32,6 +32,7 @@ interface DietitianSignupForm {
   contactNumber: string;
   preferredLanguages: string[];
   practiceType: string;
+  govIdProof: File | null;
 }
 
 const DietitianAuth = () => {
@@ -40,7 +41,8 @@ const DietitianAuth = () => {
   const [dietitianForm, setDietitianForm] = useState<DietitianSignupForm>({
     fullName: '', email: '', password: '', confirmPassword: '', licenseNumber: '', qualification: '',
     specializationAreas: [], yearsExperience: '', clinicName: '', location: '', contactNumber: '',
-    preferredLanguages: [], practiceType: ''
+    preferredLanguages: [], practiceType: '',
+    govIdProof: null,
   });
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -124,6 +126,14 @@ const DietitianAuth = () => {
       });
       return;
     }
+    if (!dietitianForm.govIdProof) {
+      toast({
+        title: "ID Proof Required",
+        description: "Please upload your government ID proof.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setLoading(true);
     try {
@@ -185,6 +195,12 @@ const DietitianAuth = () => {
     }));
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setDietitianForm(prev => ({ ...prev, govIdProof: e.target.files![0] }));
+    }
+  };
+
   const specializationOptions = [
     'Weight Management', 'Diabetes Care', 'Heart Health', 'Digestive Health',
     'Ayurvedic Nutrition', 'Sports Nutrition', 'Pediatric Nutrition', 'Geriatric Care'
@@ -195,15 +211,15 @@ const DietitianAuth = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-primary flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-sage flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Leaf className="h-8 w-8 text-white" />
-            <h1 className="text-3xl font-bold text-white">AyurDiet</h1>
+            <Leaf className="h-8 w-8 text-primary" />
+            <h1 className="text-3xl font-bold text-primary">AyurVeda</h1>
           </div>
-          <p className="text-sage-100 mb-4">Dietitian Portal</p>
-          <p className="text-sage-200 text-sm">Empower patients with personalized Ayurvedic nutrition</p>
+          <p className="text-muted-foreground mb-4">Dietitian Portal</p>
+          <p className="text-muted-foreground text-sm">Empower patients with personalized Ayurvedic nutrition</p>
         </div>
 
         <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-2xl">
@@ -458,6 +474,29 @@ const DietitianAuth = () => {
                         </div>
                       ))}
                     </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="gov-id-proof">Government ID Proof</Label>
+                    <div className="relative">
+                      <Upload className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="gov-id-proof"
+                        type="file"
+                        className="pl-10 file:text-sm file:font-medium file:text-primary file:border-0 file:bg-transparent hover:file:bg-primary/10"
+                        onChange={handleFileChange}
+                        accept=".pdf,.png,.jpg,.jpeg"
+                        required
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Upload Aadhar, PAN, etc. (PDF, JPG, PNG)
+                    </p>
+                    {dietitianForm.govIdProof && (
+                      <p className="text-xs text-accent font-medium">
+                        File selected: {dietitianForm.govIdProof.name}
+                      </p>
+                    )}
                   </div>
 
                   <Button type="submit" className="w-full" disabled={loading}>

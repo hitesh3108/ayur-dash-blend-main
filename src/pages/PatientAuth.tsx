@@ -41,50 +41,44 @@ const PatientAuth = () => {
   const { toast } = useToast();
 
   useEffect(() => {
+    // --- UPDATED LOGIC ---
+    // Helper function to check assessment status and redirect accordingly
+    const handleRedirect = async (session: Session | null) => {
+      if (!session?.user) return;
+
+      const userType = session.user.user_metadata?.user_type;
+
+      if (userType === 'patient') {
+        const { data: profile } = await supabase
+          .from('patient_profiles')
+          .select('assessment_completed')
+          .eq('user_id', session.user.id)
+          .single();
+        
+        if (profile?.assessment_completed) {
+          navigate('/patient/dashboard');
+        } else {
+          navigate('/patient/assessment');
+        }
+      } else if (userType === 'dietitian') {
+        navigate('/dietitian/dashboard');
+      }
+    };
+
+    // Check session on initial load
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      handleRedirect(session);
+    });
+
+    // Listen for auth state changes (login, logout)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          setTimeout(async () => {
-            const userType = session.user.user_metadata?.user_type;
-            if (userType === 'patient') {
-              // Check if patient has completed assessment
-              const { data: profile } = await supabase
-                .from('patient_profiles')
-                .select('assessment_completed')
-                .eq('user_id', session.user.id)
-                .single();
-              
-              if (profile?.assessment_completed) {
-                navigate('/patient/dashboard');
-              } else {
-                navigate('/patient/assessment');
-              }
-            } else if (userType === 'dietitian') {
-              navigate('/dietitian/dashboard');
-            } else {
-              navigate('/patient/assessment');
-            }
-          }, 0);
+        if (event === 'SIGNED_IN') {
+          handleRedirect(session);
         }
       }
     );
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        const userType = session.user.user_metadata?.user_type;
-        if (userType === 'patient') {
-          navigate('/patient/dashboard');
-        } else if (userType === 'dietitian') {
-          navigate('/dietitian/dashboard');
-        }
-      }
-    });
+    // --- END OF UPDATED LOGIC ---
 
     return () => subscription.unsubscribe();
   }, [navigate]);
@@ -165,17 +159,16 @@ const PatientAuth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-primary flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-sage flex items-center justify-center p-4">
       <div className="w-full max-w-lg">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Leaf className="h-8 w-8 text-white" />
-            <h1 className="text-3xl font-bold text-white">AyurDiet</h1>
+            <Leaf className="h-8 w-8 text-primary" />
+            <h1 className="text-3xl font-bold text-primary">AyurVeda</h1>
           </div>
-          <p className="text-sage-100 mb-4">Patient Portal</p>
-          <p className="text-sage-200 text-sm">Start your personalized Ayurvedic wellness journey</p>
+          <p className="text-muted-foreground mb-4">Patient Portal</p>
+          <p className="text-muted-foreground text-sm">Start your personalized Ayurvedic wellness journey</p>
         </div>
-
         <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-2xl">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold text-sage-800">Patient Access</CardTitle>

@@ -249,15 +249,15 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-primary flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Leaf className="h-8 w-8 text-white" />
-            <h1 className="text-3xl font-bold text-white">AyurDiet</h1>
-          </div>
-          <p className="text-sage-100">Join the holistic approach to nutrition</p>
-        </div>
+    <div className="min-h-screen bg-gradient-sage flex items-center justify-center p-4">
+  <div className="w-full max-w-2xl">
+    <div className="text-center mb-8">
+      <div className="flex items-center justify-center gap-2 mb-4">
+        <Leaf className="h-8 w-8 text-primary" />
+        <h1 className="text-3xl font-bold text-primary">AyurVeda</h1>
+      </div>
+      <p className="text-muted-foreground">Join the holistic approach to nutrition</p>
+    </div>
 
         <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-2xl">
           <CardHeader className="text-center">
